@@ -1,6 +1,6 @@
 // 导入 lodash ，判断是否是普通(plain)对象
 import isPlainObject from 'lodash/isPlainObject'
-//导入
+//导入 symbol 类型的 observable
 import $$observable from 'symbol-observable'
 
 /**
@@ -232,27 +232,32 @@ export default function createStore(reducer, preloadedState, enhancer) {
   }
 
   /**
-   * Interoperability point for observable/reactive libraries.
-   * @returns {observable} A minimal observable of state changes.
-   * For more information, see the observable proposal:
-   * https://github.com/zenparsing/es-observable
+   *  在 creatorStore 内部没有看到此方法的调用
+   *  (猜想 : 作者可能想用比较强大，活跃的 observable 库替换现在的 publish subscribe)
+   *
+   * @returns {observable} 状态改变的时候返回最小的 observable.
+   * 想要了解跟多关于 observable 库，建议看下 
+   * https://github.com/zenparsing/es-observable (标准 es Observable)
    */
   function observable() {
+    //订阅方法赋值给变量 outerSubscribe
     var outerSubscribe = subscribe
     return {
       /**
-       * The minimal observable subscription method.
-       * @param {Object} observer Any object that can be used as an observer.
-       * The observer object should have a `next` method.
-       * @returns {subscription} An object with an `unsubscribe` method that can
-       * be used to unsubscribe the observable from the store, and prevent further
-       * emission of values from the observable.
+       * 这是一个最小的观察订阅方法
+       * 
+       * @param {Object}  观察着的任何一个对象都可以作为一个 observer.
+       * 观察者应该有 `next` 方法
        */
       subscribe(observer) {
+
+        //判断 observer 是一个对象
         if (typeof observer !== 'object') {
+          //抛出异常
           throw new TypeError('Expected the observer to be an object.')
         }
 
+        //获取观察着的状态
         function observeState() {
           if (observer.next) {
             observer.next(getState())
@@ -260,6 +265,7 @@ export default function createStore(reducer, preloadedState, enhancer) {
         }
 
         observeState()
+        //返回一个取消订阅的方法
         var unsubscribe = outerSubscribe(observeState)
         return { unsubscribe }
       },
@@ -280,6 +286,6 @@ export default function createStore(reducer, preloadedState, enhancer) {
     subscribe, //订阅一个状态改变后，要触发的监听函数 
     getState,  // 获取 store 里的 state
     replaceReducer, //Redux热加载的时候可以替换 Reducer
-    [$$observable]: observable
+    [$$observable]: observable //对象的私有属性，供内部使用
   }
 }
