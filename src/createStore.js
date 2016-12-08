@@ -1,6 +1,6 @@
 // 导入 lodash ，判断是否是普通(plain)对象
 import isPlainObject from 'lodash/isPlainObject'
-//导入 symbol 类型的 observable
+//导入 symbol 类型的 observable (symbol类型的属性，是对象的私有属性)
 import $$observable from 'symbol-observable'
 
 /**
@@ -269,7 +269,7 @@ export default function createStore(reducer, preloadedState, enhancer) {
         var unsubscribe = outerSubscribe(observeState)
         return { unsubscribe }
       },
-
+      //对象的私有属性，暂时不知道有什么用途
       [$$observable]() {
         return this
       }
