@@ -2,7 +2,7 @@
 Redux 源码分析
 
 ### 介绍
-我分析的是用 es6 语法的源码，大家看目录结构，一共有 6 个问件。各个文件功能,想要查看更细节的东西，直接看 src文件件下的源码
+我分析的是用 es6 语法的源码，大家看目录结构，一共有 6 个文件。各个文件功能,想要查看更细节的东西，直接看 src文件件下的源码
 
 * `applyMiddlewar.js`  使用自定义的 middleware 来扩展 Redux
 * `bindActionCreators.js` 把 action creators 转成拥有同名 keys 的对象,使用时可以直接调用
