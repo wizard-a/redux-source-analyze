@@ -156,7 +156,7 @@ export default function combineReducers(reducers) {
       var nextStateForKey = reducer(previousStateForKey, action)
       //判断执行完Reducer后, 返回回来的 nextStateForKey 是 undefined
       if (typeof nextStateForKey === 'undefined') {
-        //得到 Undefined 状态的错误消息
+        //得到 Undefined 状态的错误消息  
         var errorMessage = getUndefinedStateErrorMessage(key, action)
         //抛出异常
         throw new Error(errorMessage)
